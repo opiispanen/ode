@@ -1,2 +1,4 @@
 # ode
-Reactive Ode elements and a simple hash router
+Reactive Ode "framework". 
+
+Created for self-educational purposes, please do not use in production.
