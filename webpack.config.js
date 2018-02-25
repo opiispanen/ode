@@ -2,7 +2,7 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: './src/example.js',
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
@@ -26,7 +26,6 @@ module.exports = {
       {
         test: /\.sass$/,
         use: [
-          'vue-style-loader',
           'css-loader',
           'sass-loader?indentedSyntax'
         ],
@@ -34,7 +33,10 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        query: {
+          presets: ['es2015'],
+        }
       },
       {
         test: /\.(html|png|jpg|gif|svg)$/,
@@ -48,5 +50,16 @@ module.exports = {
   resolve: {
     extensions: ['*', '.js', '.json']
   },
-  devtool: '#eval-source-map'
+  devtool: '#source-map',
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: false,
+      compress: {
+        warnings: false
+      }
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
+  ]
 }
