@@ -1,6 +1,8 @@
 class Ode {
 
     /**
+     * Assign properties and methods from the
+     * settings object and initialize the template
      * 
      * @param {Object} settings 
      * @returns {Proxy}
@@ -58,18 +60,34 @@ class Ode {
             return false;
 
         // Basicly allow any content that is a String
-        // or has a toString method
         if(!(value instanceof Function)
-            && !(value instanceof HTMLElement)) {
+            && !(value instanceof HTMLElement)
+            && !(value instanceof Array)) {
             el.innerHTML = value;
+            return true;
+        }
+
+        // With arrays, just join them
+        if (value instanceof Array) {
+            el.innerHTML = value.join('');
+            return true;
         }
 
         // Empty the element's content and append the
         // updated value
         if (value instanceof HTMLElement) {
-            el.innerHTML = ''
-            el.appendChild(value)
+            el.innerHTML = '';
+            el.appendChild(value);
+            return true;
         }
+
+        // Value may be an object with a toString method
+        if (typeof value.toString === 'function') {
+            el.innerHTML = value.toString();
+            return true;
+        }
+
+        return false;
     }
 }
 
