@@ -39,6 +39,7 @@ class Ode {
      * Create a DOM object with the html string provided
      * 
      * @param {String} html 
+     * @returns {HTMLElement}
      */
     initTemplate(html) {
         const div = document.createElement('div');
@@ -48,9 +49,19 @@ class Ode {
     }
 
     /**
+     * Return the parent element's innerHTML
+     * 
+     * @returns {String}
+     */
+    toString() {
+        return this.element.innerHTML
+    }
+
+    /**
      * 
      * @param {String} prop 
      * @param {Mixed} value 
+     * @returns {Boolean}
      */
     updateTemplate(prop, value) {
         const el = this.element.querySelector(`[ode-${prop}]`)
@@ -81,7 +92,7 @@ class Ode {
             return true;
         }
 
-        // Value may be an object with a toString method
+        // Value may be an object (like this) with a toString method
         if (typeof value.toString === 'function') {
             el.innerHTML = value.toString();
             return true;
