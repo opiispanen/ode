@@ -9,15 +9,29 @@ class Ode {
      */
     constructor(settings = {}) {
         let template = '';
+        
+        this.element = this.initTemplate(settings.template);
 
         Object.keys(settings).forEach((key) => {
-            if (key === 'template')
-                template = settings[key]
-            else
-                this[key] = settings[key];
-        })
+            let value = settings[key];
 
-        this.element = this.initTemplate(template);
+            if (key !== 'template' && !Array.isArray(value) && typeof value !== 'function') {
+
+                if (typeof value === 'object') {
+                    const element = this.element.querySelector(`[ode-${key}]`)
+                    
+                    value.template = element.innerHTML;
+
+                    element.innerHTML = '';
+
+                    value = new Ode(value);
+                } 
+                    
+                this.updateTemplate(key, value)
+            }   
+
+            this[key] = value;
+        })
 
         /**
          * Return a Proxy that hooks the set handler
@@ -64,6 +78,9 @@ class Ode {
      * @returns {Boolean}
      */
     updateTemplate(prop, value) {
+        if (/\$/.test(prop))
+            return false;
+
         const el = this.element.querySelector(`[ode-${prop}]`)
         
         // Element not found, fail quietly

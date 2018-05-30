@@ -20,8 +20,13 @@ const routes = {
     }),
     css: new Ode({
         template: `
-          CSS is a styling language for the Web
-        `
+          CSS is a styling language for the <span ode-nested><span ode-obj><span ode-value></span></span></span>
+        `,
+        nested: {
+            obj: {
+                value: 'WEB'
+            }
+        }
     }),
     js: new Ode({
         template: `
