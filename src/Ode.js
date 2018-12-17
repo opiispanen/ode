@@ -1,121 +1,112 @@
+function registerElement(template) {
+    const div = document.createElement('div');
+    
+    div.innerHTML = template.trim();
+    
+    return div; 
+}
+
+function createId() {
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    
+    let text = '';
+    
+    for (let i = 0; i < 8; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+    return text;
+}
+
 class Ode {
-
-    /**
-     * Assign properties and methods from the
-     * settings object and initialize the template
-     * 
-     * @param {Object} settings 
-     * @returns {Proxy}
-     */
     constructor(settings = {}) {
-        let template = '';
-        
-        this.element = this.initTemplate(settings.template);
+        this.$$element = registerElement(settings.template || '');
+        this.$$state = {};
+        this.$$stateListeners = {};
+        this.$$components = {};
 
-        Object.keys(settings).forEach((key) => {
-            let value = settings[key];
+        if (typeof settings.mount !== 'undefined') {
+            document
+                .querySelector(settings.mount)
+                .appendChild(this.$$element);
+        }
+    }
 
-            if (key !== 'template' && !Array.isArray(value) && typeof value !== 'function') {
+    addComponent(component) {
+        const id = createId();
+        const element = registerElement(component.template);
+        const obj = {
+            id,
+            element
+        };
+        const self = Object.assign(obj, {
+            parent: this.$$element,
+            components: this.$$components,
+            getState: (context) => Object.assign({}, this.$$state[context])
+        });
 
-                if (typeof value === 'object') {
-                    const element = this.element.querySelector(`[ode-${key}]`)
+        if (typeof component.onInit === 'function') {
+            component.onInit.call(self);
+        }
+
+        if (typeof component.stateListeners !== 'undefined') {
+            Object.keys(component.stateListeners).forEach(contextName => {
+                const context = component.stateListeners[contextName];
+
+                Object.keys(context).forEach(prop => {
+                    if (typeof context[prop] === 'function') {
+                        this.addStateListener(contextName, prop, context[prop].bind(self));
+                    }
+                })
+            })
+        }
+
+        this.$$components[id] = obj;
+
+        return obj;
+    }
+
+    addState(context, defaultValues = {}) {
+        if (typeof this.$$state[context] === 'undefined') {
+            this.$$state[context] = new Proxy(defaultValues, {
+                set: (obj, prop, value) => {
+                    const stateListener = this.$$stateListeners[context];
+
+                    if (typeof stateListener !== 'undefined' 
+                            && typeof stateListener[prop] !== 'undefined'
+                            && Array.isArray(stateListener[prop])) {
+                        stateListener[prop].forEach(callback => {
+                            if (typeof callback === 'function') {
+                                callback(value);
+                            }
+                        });
+                    }
                     
-                    value.template = element.innerHTML;
+                    obj[prop] = value;
+    
+                    return true;
+                }
+            });
+        } else {
+            this.$$state[context] = Object.assign(this.$$state[context], defaultValues);
+        }
 
-                    element.innerHTML = '';
-
-                    value = new Ode(value);
-                } 
-                    
-                this.updateTemplate(key, value)
-            }   
-
-            this[key] = value;
-        })
-
-        /**
-         * Return a Proxy that hooks the set handler
-         * and triggers template updating
-         */
-        return new Proxy(this, {
-            set: (obj, prop, value) => {
-                if (prop !== 'element')
-                    this.updateTemplate(prop, value)
-
-                obj[prop] = value
-
-                return true;
-            }
-        })
+        return this.$$state[context];
     }
 
-    /**
-     * Create a DOM object with the html string provided
-     * 
-     * @param {String} html 
-     * @returns {HTMLElement}
-     */
-    initTemplate(html) {
-        const div = document.createElement('div');
-        div.innerHTML = html.trim();
-        
-        return div; 
-    }
-
-    /**
-     * Return the parent element's innerHTML
-     * 
-     * @returns {String}
-     */
-    toString() {
-        return this.element.innerHTML
-    }
-
-    /**
-     * 
-     * @param {String} prop 
-     * @param {Mixed} value 
-     * @returns {Boolean}
-     */
-    updateTemplate(prop, value) {
-        if (/\$/.test(prop))
-            return false;
-
-        const el = this.element.querySelector(`[ode-${prop}]`)
-        
-        // Element not found, fail quietly
-        if (!el)
-            return false;
-
-        // Basicly allow any content that is a String
-        if(!(value instanceof Function)
-            && !(value instanceof HTMLElement)
-            && !(value instanceof Array)) {
-            el.innerHTML = value;
-            return true;
+    addStateListener(context, prop, callback) {
+        if (typeof this.$$stateListeners[context] === 'undefined') {
+            this.$$stateListeners[context] = {};
         }
 
-        // With arrays, just join them
-        if (value instanceof Array) {
-            el.innerHTML = value.join('');
-            return true;
+        if (typeof this.$$stateListeners[context][prop] === 'undefined') {
+            this.$$stateListeners[context][prop] = [];
         }
 
-        // Empty the element's content and append the
-        // updated value
-        if (value instanceof HTMLElement) {
-            el.innerHTML = '';
-            el.appendChild(value);
-            return true;
+        if (typeof callback === 'function') {
+            this.$$stateListeners[context][prop].push(callback);
+        } else {
+            console.warn(context, prop, 'callback is not a function!');
         }
-
-        // Value may be an object (like this) with a toString method
-        if (typeof value.toString === 'function') {
-            el.innerHTML = value.toString();
-            return true;
-        }
-
-        return false;
     }
 }
 
