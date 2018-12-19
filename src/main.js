@@ -13,7 +13,8 @@ const mainState = app.addState('main', {
     counter: 0
 });
 
-app.addComponent({
+const valueDisplay = app.addComponent({
+    elementType: 'span',
     template: `Value is now <span data-value></span>`,
     stateListeners: {
         main: {
@@ -28,12 +29,13 @@ app.addComponent({
 
         this.element.querySelector('[data-value]').innerHTML = state.counter;
 
-        this.parent.querySelector('#value').appendChild(this.element);
+        // this.parent.querySelector('#value').replaceWith(this.element);
     }
 })
 
 app.addComponent({
     template: `<button data-plus>+</button>
+        <span data-value></span>
         <button data-minus>-</button>`,
     onInit() {
         const state = mainState;
@@ -48,6 +50,8 @@ app.addComponent({
             state.counter -= 1;
         })
 
-        this.parent.querySelector('#input').appendChild(this.element);
+        this.element.querySelector('[data-value]').replaceWith(valueDisplay.element);
+        
+        this.parent.querySelector('#input').replaceWith(this.element);
     }
 })

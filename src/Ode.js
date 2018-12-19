@@ -1,25 +1,8 @@
-function registerElement(template) {
-    const div = document.createElement('div');
-    
-    div.innerHTML = template.trim();
-    
-    return div; 
-}
-
-function createId() {
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    
-    let text = '';
-    
-    for (let i = 0; i < 8; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-  
-    return text;
-}
+import { createId, createElement } from './Ode.Utils.js';
 
 class Ode {
     constructor(settings = {}) {
-        this.$$element = registerElement(settings.template || '');
+        this.$$element = createElement(settings.template || '', settings.elementType || 'div');
         this.$$state = {};
         this.$$stateListeners = {};
         this.$$components = {};
@@ -33,7 +16,7 @@ class Ode {
 
     addComponent(component) {
         const id = createId();
-        const element = registerElement(component.template);
+        const element = createElement(component.template, component.elementType || 'div');
         const obj = {
             id,
             element
@@ -41,7 +24,8 @@ class Ode {
         const self = Object.assign(obj, {
             parent: this.$$element,
             components: this.$$components,
-            getState: (context) => Object.assign({}, this.$$state[context])
+            // read-only state here
+            getState: (context) => Object.assign({}, context === 'local' ? component.state : this.$$state[context])
         });
 
         if (typeof component.onInit === 'function') {
@@ -66,6 +50,12 @@ class Ode {
     }
 
     addState(context, defaultValues = {}) {
+        if (context === 'local') {
+            console.warn('Context name', context, 'is reserved!');
+
+            return {};
+        }
+
         if (typeof this.$$state[context] === 'undefined') {
             this.$$state[context] = new Proxy(defaultValues, {
                 set: (obj, prop, value) => {
@@ -96,10 +86,10 @@ class Ode {
     addStateListener(context, prop, callback) {
         if (typeof this.$$stateListeners[context] === 'undefined') {
             this.$$stateListeners[context] = {};
-        }
 
-        if (typeof this.$$stateListeners[context][prop] === 'undefined') {
-            this.$$stateListeners[context][prop] = [];
+            if (typeof this.$$stateListeners[context][prop] === 'undefined') {
+                this.$$stateListeners[context][prop] = [];
+            }
         }
 
         if (typeof callback === 'function') {
