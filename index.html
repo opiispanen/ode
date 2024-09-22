@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Ode</title>
-</head>
-<body>
-    <div id="app"></div>
-    <script src="dist/build.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reactive VanillaJS</title>
+    <link rel="stylesheet" href="/src/style.css">
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="time-container" style="margin-bottom: 24px;">
+        <div class="time milliseconds" style="flex-direction: row;">
+          <div class="value">0</div>
+          <div class="label">milliseconds</div>
+        </div>
+      </div>
+      <div class="time-container">
+        <div class="time hours">
+          <div class="value">0</div>
+          <div class="label">hours</div>
+        </div>
+        <div class="time minutes">
+          <div class="value">0</div>
+          <div class="label">minutes</div>
+        </div>
+        <div class="time seconds">
+          <div class="value">0</div>
+          <div class="label">seconds</div>
+        </div>
+      </div>
+      <div class="time-container actions">
+        <button id="addHours">add</button>
+        <button id="addMinutes">add</button>
+        <button id="addSeconds">add</button>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>
