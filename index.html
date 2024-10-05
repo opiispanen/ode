@@ -1,41 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reactive VanillaJS</title>
-    <link rel="stylesheet" href="/src/style.css">
-  </head>
-  <body>
-    <div class="main-container">
-      <div class="hellos-container"></div>
-      <div class="time-container" style="margin-bottom: 24px;">
-        <div class="time milliseconds" style="flex-direction: row;">
-          <div class="value">0</div>
-          <div class="label">milliseconds</div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reactive VanillaJS</title>
+  <link rel="stylesheet" href="/src/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <button class="toggle-mode">Toggle Mode</button>
+        <div class="time-container">
+            <div class="time hours">
+                <div class="value">0</div>
+                <div class="label">hours</div>
+            </div>
+            <div class="time minutes">
+                <div class="value">0</div>
+                <div class="label">minutes</div>
+            </div>
+            <div class="time seconds">
+                <div class="value">0</div>
+                <div class="label">seconds</div>
+            </div>
         </div>
-      </div>
-      <div class="time-container">
-        <div class="time hours">
-          <div class="value">0</div>
-          <div class="label">hours</div>
+    </header>
+    <nav class="menu">
+        <button id="addHours">Add 1 Hour</button>
+        <button id="addMinutes">Add 10 Minutes</button>
+        <button id="addSeconds">Add 10 Seconds</button>
+    </nav>
+    <main class="content">
+        <div class="time-container" style="margin-bottom: 24px;">
+            <div class="time milliseconds" style="flex-direction: row;">
+                <div class="value">0</div>
+                <div class="label">milliseconds</div>
+            </div>
         </div>
-        <div class="time minutes">
-          <div class="value">0</div>
-          <div class="label">minutes</div>
-        </div>
-        <div class="time seconds">
-          <div class="value">0</div>
-          <div class="label">seconds</div>
-        </div>
-      </div>
-      <div class="time-container actions">
-        <button id="addHours">add</button>
-        <button id="addMinutes">add</button>
-        <button id="addSeconds">add</button>
-      </div>
-    </div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+        <div class="hellos-container"></div>
+    </main>
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
 </html>

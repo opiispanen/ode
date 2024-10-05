@@ -31,3 +31,8 @@ const loop = () => {
 }
 
 loop()
+
+document.querySelector('.toggle-mode')
+.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+})

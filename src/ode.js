@@ -5,6 +5,7 @@ export const query = document.querySelector.bind(document)
  * @returns {Proxy}
  */
 export function createProxy(initialValue) {
+    // TODO: handle different types: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof
     const callbacks = [];
     const onChange = (callback) => {
         const id = callbacks.length + 1;

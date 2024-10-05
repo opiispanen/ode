@@ -7,7 +7,7 @@ hellos.onChange((val) => {
     val.forEach((row, index) => {
         const li = document.createElement('li')
 
-        li.innerHTML = `<li>Hello (${ index }): ${ row }</li>`
+        li.innerHTML = `Hello (${ index }): ${ row }`
         li.style.cursor = 'pointer'
         li.style.marginBottom = '7px'
         li.addEventListener('click', () => {
