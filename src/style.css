@@ -9,11 +9,14 @@
     --background-color: #242424;
     --text-color: #f0f0f0;
     --border-color: #666;
-    --header-bg-color: #242424;
-    --menu-bg-color: #242424;
+    --header-bg-color: #292929;
+    --menu-bg-color: #545454b8;
     --content-bg-color: #242424;
     --button-bg-color: #555;
     --button-hover-opacity: 0.8;
+    --container-padding: 10px;
+    --container-border-radius: 16px;
+    --button-border-radius: calc(var(--container-border-radius) - var(--container-padding));
 }
 
 body.light-mode {
@@ -28,9 +31,17 @@ body.light-mode {
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: var(--background-color);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
+    background: linear-gradient(135deg, 
+              #3498db,   /* Soft blue */
+              #6ab04c,   /* Fresh green */
+              #1abc9c,   /* Aqua */
+              #2980b9,   /* Deep blue */
+              #2ecc71    /* Soft green */
+              );
+    background-size: cover;
+    min-height: 100vh;
 }
 
 .container {
@@ -45,11 +56,12 @@ body {
     margin: 20px auto;
     gap: 0px;
     border: 1px solid var(--border-color);
-    border-radius: 14px;
+    border-radius: var(--container-border-radius);
     overflow: hidden;
+    box-shadow: 0 1px 5px 1px #242424;
 }
 
-.header, .menu, .content {
+.header, .content {
     padding: 20px;
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
@@ -60,7 +72,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--border-color);
+    /*border-bottom: 1px solid var(--border-color);*/
 }
 
 /* Time in header aligned right */
@@ -73,19 +85,22 @@ body {
 .menu {
     grid-area: menu;
     background-color: var(--menu-bg-color);
-    border-right: 1px solid var(--border-color);
+    padding: var(--container-padding);
+    /*border-right: 1px solid var(--border-color);*/
 }
 
 .menu button {
     display: block;
     width: 100%;
-    margin: 10px 0;
+    margin-bottom: 10px;
     padding: 10px;
     background-color: var(--button-bg-color);
     color: var(--text-color);
     border: none;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
+    border-radius: var(--button-border-radius);
+    backdrop-filter: blur(4px);
 }
 
 .menu button:hover {
@@ -103,7 +118,7 @@ body {
     .container {
         grid-template-columns: 20% 80%;
         grid-template-areas:
-        "header header"
+        "menu header"
         "menu content";
     }
 }
@@ -116,6 +131,7 @@ body {
     padding: 10px 20px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
+    border-radius: var(--button-border-radius);
 }
 
 .toggle-mode:hover {
