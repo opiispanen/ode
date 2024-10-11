@@ -3,12 +3,15 @@ import {
     hours, 
     minutes, 
     seconds,
-    hellos
+    array,
+    obj
 } from './store.js'
 import './hours.js'
 import './minutes.js'
 import './seconds.js'
-import './hellos.js'
+import './array.js'
+import './object.js'
+import { products } from './misc.js'
 
 const inMilliseconds = () => hours.value * 3600000 
     + minutes.value * 60000 
@@ -20,9 +23,17 @@ const updateMilliseconds = () => {
 hours.onChange(() => updateMilliseconds())
 minutes.onChange(() => {
     updateMilliseconds()
-    hellos.value.push(new Date())
+    array.value.push(new Date())
 })
-seconds.onChange(() => updateMilliseconds())
+seconds.onChange(() => {
+    updateMilliseconds()
+
+    const rand = Math.floor(Math.random() * 4)
+    const newProduct = products[rand]
+    
+    obj.value.productId = newProduct.productId
+    obj.value.name = newProduct.name
+})
 
 const loop = () => {
     seconds.value += 1;

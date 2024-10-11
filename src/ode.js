@@ -5,6 +5,11 @@ export const query = document.querySelector.bind(document)
  * @returns {Proxy}
  */
 export function createProxy(initialValue) {
+    const type = typeof initialValue;
+
+    if (type === 'function') {
+        throw 'Ode: Invalid type (function)'
+    }
     // TODO: handle different types: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof
     const callbacks = [];
     const onChange = (callback) => {
@@ -22,8 +27,9 @@ export function createProxy(initialValue) {
         }
     }
 
-    if (Array.isArray(initialValue)) {
-        const arrayHandler = {
+    if (Array.isArray(initialValue) 
+        || (type === 'object' && initialValue !== null)) {
+        const handler = {
             set(target, property, value) {
                 if (property in target) {
                     console.log(`Element at index ${property} updated from ${target[property]} to ${value}`);
@@ -47,7 +53,7 @@ export function createProxy(initialValue) {
             },
         }
         return {
-            value: new Proxy(initialValue, arrayHandler),
+            value: new Proxy(initialValue, handler),
             onChange,
         }
     }

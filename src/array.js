@@ -1,7 +1,7 @@
 import { query } from './ode.js'
-import { hellos } from './store.js'
+import { array } from './store.js'
 
-hellos.onChange((val) => {
+array.onChange((val) => {
     const ul = document.createElement('ul')
     
     val.forEach((row, index) => {
@@ -11,11 +11,11 @@ hellos.onChange((val) => {
         li.style.cursor = 'pointer'
         li.style.marginBottom = '7px'
         li.addEventListener('click', () => {
-            hellos.value.splice(index, 1)
+            array.value.splice(index, 1)
         })
 
         ul.append(li)
     })
 
-    query('.hellos-container').replaceChildren(ul)
+    query('.array-container').replaceChildren(ul)
 })
