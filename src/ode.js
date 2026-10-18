@@ -11,19 +11,16 @@ export function createProxy(initialValue) {
         throw 'Ode: Invalid type (function)'
     }
     // TODO: handle different types: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof
-    const callbacks = [];
+    const callbacks = new Set();
     const onChange = (callback) => {
-        const id = callbacks.length + 1;
+        // Each subscription gets its own entry, so the same callback can be
+        // registered twice and unsubscribing is safe to call repeatedly.
+        const entry = { callback };
 
-        callbacks.push({
-            id,
-            callback,
-        })
+        callbacks.add(entry);
 
         return () => {
-            const index = callbacks.findIndex(row => row.id === id);
-
-            callbacks.splice(index, 1);
+            callbacks.delete(entry);
         }
     }
 
