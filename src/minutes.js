@@ -1,4 +1,4 @@
-import { query } from './ode.js'
+import { query } from './core/ode.js'
 import { hours, minutes } from './store.js'
 
 minutes.onChange((val) => {

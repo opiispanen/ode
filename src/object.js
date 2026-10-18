@@ -1,4 +1,4 @@
-import { query } from './ode.js'
+import { query } from './core/ode.js'
 import { obj } from './store.js'
 
 const update = (val) => {

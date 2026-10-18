@@ -1,4 +1,4 @@
-import { query } from './ode.js'
+import { query } from './core/ode.js'
 import { array } from './store.js'
 
 array.onChange((val) => {

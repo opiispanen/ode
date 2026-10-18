@@ -1,4 +1,4 @@
-import { createProxy } from './ode.js'
+import { createProxy } from './core/ode.js'
 import { products } from './misc.js'
 
 export const hours = createProxy(0)
